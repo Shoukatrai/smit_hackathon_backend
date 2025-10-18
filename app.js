@@ -1,0 +1,21 @@
+import express from "express";
+import dotenv from "dotenv"
+import { dbConnection } from "./db/db.js";
+const app = express()
+dotenv.config()
+app.get("/" , (req , res)=>res.send("Hello Dear , Server is Running!"))
+
+try {
+  await dbConnection();
+  console.log("DB connected");
+} catch (err) {
+  console.error("DB connection failed", err.messages);
+}
+console.log("after DB connection")
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`))
+}
+
+// Vercel deployment
+export default app
