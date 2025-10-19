@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import { dbConnection } from "./db/db.js";
 import cors from "cors"
 import authRouter from "./routes/auth.js"
+import reportRouter from "./routes/report.js"
 const app = express()
 dotenv.config()
 app.get("/", (req, res) => res.send("Hello Dear , Server is Running!"))
@@ -12,6 +13,7 @@ app.use(cors())
 
 //routes
 app.use("/api/auth", authRouter)
+app.use("/api/report", reportRouter)
 
 try {
   await dbConnection();

@@ -41,34 +41,53 @@ export const Login = async (req, res) => {
 
 export const Signup = async (req, res) => {
     try {
-        const body = req.body
-        const isExists = await userModel.findOne({ email: body.email });
-        if (isExists) {
-            return res.json({
-                message: "Email Address Already exists",
+        const { name, email, password, age, gender } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
                 status: false,
+                message: "Name, email, and password are required.",
                 data: null,
             });
         }
 
-        const hashPass = await bcrypt.hash(body.password, 10);
-        const saveObj = {
-            ...body,
+        const isExists = await userModel.findOne({ email });
+        if (isExists) {
+            return res.status(409).json({
+                status: false,
+                message: "Email address already exists.",
+                data: null,
+            });
+        }
+
+        const hashPass = await bcrypt.hash(password, 10);
+
+        const newUser = await userModel.create({
+            name,
+            email,
             password: hashPass,
-        };
-        const response = await userModel.create(saveObj);
-        res.json({
-            message: "Signup successful.",
-            status: true,
-            data: response,
+            age,
+            gender,
         });
+
+        const userData = newUser.toObject();
+        delete userData.password;
+
+        return res.status(201).json({
+            status: true,
+            message: "Signup successful.",
+            data: userData,
+        });
+
     } catch (error) {
-        res.json({
-            message: error.message || "Something went wrong",
+        console.error("Signup Error:", error);
+        return res.status(500).json({
             status: false,
+            message: error.message || "Something went wrong during signup.",
             data: null,
         });
     }
-}
+};
+
 
 
