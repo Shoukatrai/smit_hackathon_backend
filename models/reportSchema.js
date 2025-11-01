@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 
 const reportSchema = new mongoose.Schema(
   {
@@ -7,15 +7,20 @@ const reportSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    reportUrl: {
+      type: String,
+    },
     reportDate: {
       type: Date,
       default: Date.now,
     },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    family: {
-      type: String
+    familyMember: {
+      type: String,
+      default: "",
     },
     filePath: {
       type: String,
@@ -61,3 +66,4 @@ const reportSchema = new mongoose.Schema(
 
 const Report = mongoose.model("Report", reportSchema);
 export default Report;
+// export default mongoose.model("Report", reportSchema);

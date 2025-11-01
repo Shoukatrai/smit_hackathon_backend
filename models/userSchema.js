@@ -21,7 +21,14 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
     },
+    familyMembers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Family",
+        default: [],
+      },
+    ],
   },
-  { timestamps: true });
-
-export const userModel = mongoose.model("User", userSchema);
+  { timestamps: true }
+);
+export default mongoose.model("User", userSchema);
